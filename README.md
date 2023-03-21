@@ -4,7 +4,7 @@ Deno Check Updates 🦕
 
 
 ```sh
-$ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@v0.1.0/mod.ts --update
+$ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.1/mod.ts --update
 ```
 
 ```

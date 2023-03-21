@@ -24,7 +24,7 @@ await new Command()
   .description(
     "Checks the latest version of mapped libraries and updates them if requested.",
   )
-  .version("0.1.0")
+  .version("0.1.1")
   .option("-u, --update [value:boolean]", "Updates the dependecies's maps.", {
     default: false,
     standalone: true,
