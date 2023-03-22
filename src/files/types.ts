@@ -11,5 +11,5 @@ export type ReadMapFileResult = {
 export type JSONImportMap = {
   imports: {
     [k: string]: string;
-  }
-}
+  };
+};

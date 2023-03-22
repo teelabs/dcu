@@ -5,7 +5,6 @@ export const extractURL = (str: string, regex: RegExp): URL | null => {
 };
 
 export const extractNameAndVersion = (str: string): string[] => {
-
   const match = /\/?(\w+)@v?([\d.]+)\/?/.exec(str);
 
   return (match && match.toSpliced(0, 1).reverse()) || [];
@@ -39,4 +38,4 @@ export const fetchLatestSourceURL = async (source: string): Promise<string> => {
   }
 
   return simpleCache.get(source);
-}
+};

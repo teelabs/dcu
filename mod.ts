@@ -4,7 +4,10 @@ import { JSONImportMap, ReadMapFileResult } from "./src/files/types.ts";
 import { buildJSONModule, buildTSModule } from "./src/modules/mod.ts";
 import { DenoModule } from "./src/modules/types.ts";
 
-const handleTSModules = async (mapFile: ReadMapFileResult, update: boolean): Promise<DenoModule[]> => {
+const handleTSModules = async (
+  mapFile: ReadMapFileResult,
+  update: boolean,
+): Promise<DenoModule[]> => {
   const modules: DenoModule[] = [];
 
   const entries = mapFile.content!.split("\n");
@@ -30,7 +33,10 @@ const handleTSModules = async (mapFile: ReadMapFileResult, update: boolean): Pro
   return modules;
 };
 
-const handleJSONModules = async (mapFile: ReadMapFileResult, update: boolean): Promise<DenoModule[]> => {
+const handleJSONModules = async (
+  mapFile: ReadMapFileResult,
+  update: boolean,
+): Promise<DenoModule[]> => {
   const modules: DenoModule[] = [];
 
   const { imports = {} } = JSON.parse(mapFile.content!) as JSONImportMap;
@@ -53,38 +59,46 @@ const handleJSONModules = async (mapFile: ReadMapFileResult, update: boolean): P
   return modules;
 };
 
-const handleModules = (mapFile: ReadMapFileResult, update: boolean): Promise<DenoModule[]> => {
-  return mapFile.isTS() ? handleTSModules(mapFile, update) : handleJSONModules(mapFile, update);
+const handleModules = (
+  mapFile: ReadMapFileResult,
+  update: boolean,
+): Promise<DenoModule[]> => {
+  return mapFile.isTS()
+    ? handleTSModules(mapFile, update)
+    : handleJSONModules(mapFile, update);
 };
 
-const displayResultTable = (mapFile: ReadMapFileResult, modules: DenoModule[]) => {
+const displayResultTable = (
+  mapFile: ReadMapFileResult,
+  modules: DenoModule[],
+) => {
   const table = new Table()
-  .header([
-    "Module Name",
-    "Current Version",
-    "Latest Version",
-    "Updated?",
-  ])
-  .body(
-    modules.map((
-      { name, currentVersion, latestVersion, updated },
-    ) =>
-      Row.from([
-        name,
-        currentVersion,
-        latestVersion,
-        updated as unknown as string,
-      ])
-    ),
-  )
-  .padding(4)
-  .indent(1);
+    .header([
+      "Module Name",
+      "Current Version",
+      "Latest Version",
+      "Updated?",
+    ])
+    .body(
+      modules.map((
+        { name, currentVersion, latestVersion, updated },
+      ) =>
+        Row.from([
+          name,
+          currentVersion,
+          latestVersion,
+          updated as unknown as string,
+        ])
+      ),
+    )
+    .padding(4)
+    .indent(1);
 
   console.log(`\n\n File: ${mapFile.name} (${mapFile.path})`);
   console.log("=".repeat(table.toString().indexOf("\n") + 1));
 
   table.render();
-}
+};
 
 await new Command()
   .name("dcu - deno check updates 🦕")

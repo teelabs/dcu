@@ -1,6 +1,6 @@
 import {
-  buildSourceURLWithVersion,
   buildSourceURLWithoutVersion,
+  buildSourceURLWithVersion,
   extractNameAndVersion,
   extractURL,
   fetchLatestSourceURL,
@@ -20,14 +20,16 @@ export const buildJSONModule = (str: string): Promise<DenoModule | null> => {
 
   try {
     currentSource = new URL(str);
-  } catch(_) {
+  } catch (_) {
     // do nothing
   }
 
   return buildModule(currentSource);
 };
 
-const buildModule = async (currentSource: URL | null): Promise<DenoModule | null> => {
+const buildModule = async (
+  currentSource: URL | null,
+): Promise<DenoModule | null> => {
   if (currentSource) {
     const currentSourceURL = buildSourceURLWithVersion(
       currentSource!.pathname,
@@ -40,7 +42,9 @@ const buildModule = async (currentSource: URL | null): Promise<DenoModule | null
     const latestSourceURL = await fetchLatestSourceURL(mainSourceURL);
     const latestSource = new URL(latestSourceURL);
 
-    const [currentVersion, name] = extractNameAndVersion(currentSource!.pathname);
+    const [currentVersion, name] = extractNameAndVersion(
+      currentSource!.pathname,
+    );
     const [latestVersion] = extractNameAndVersion(latestSource!.pathname);
 
     const updated = false;

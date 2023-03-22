@@ -9,6 +9,7 @@ Deno Check Updates 🦕
 ```sh
 $ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/mod.ts
 ```
+
 ```
  File: deps.ts (./deps.ts)
 ==============================================================
@@ -23,6 +24,7 @@ $ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/
 ```sh
 $ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/mod.ts --update
 ```
+
 ```
  File: import_map.json (./import_map.json)
 ==============================================================
@@ -35,14 +37,15 @@ $ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/
  core           1.0.1              1.2.3             true
  twind          0.16.17            1.0.7             true
  twind          0.16.17            1.0.7             true
-
 ```
 
 ## Done
+
 - [x] Add support for (dev_)deps.ts;
 - [x] Add support for import_map.json.
 
 ## To-Do
+
 - [ ] Improve the method for discovering dependency mapping files;
 - [ ] Add tests;
 - [ ] Add docs.
