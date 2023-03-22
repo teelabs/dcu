@@ -46,7 +46,9 @@ const handleJSONModules = async (
 
     if (module) {
       if (update && module.shouldUpdate()) {
-        imports[name] = module.latestSourceURL;
+        imports[name] = name.endsWith("/")
+          ? `${module.latestSourceURL}/`
+          : module.latestSourceURL;
         module.updated = true;
 
         mapFile.content = JSON.stringify({ imports }, null, 2);
@@ -105,7 +107,7 @@ await new Command()
   .description(
     "Checks the latest version of mapped libraries and updates them if requested.",
   )
-  .version("0.1.2")
+  .version("0.1.3")
   .option("-u, --update [value:boolean]", "Updates the dependecies's maps.", {
     default: false,
     standalone: true,

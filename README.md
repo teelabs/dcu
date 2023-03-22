@@ -7,7 +7,7 @@ Deno Check Updates 🦕
 #### Checking for new versions on a deps.ts file:
 
 ```sh
-$ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/mod.ts
+$ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.3/mod.ts
 ```
 
 ```
@@ -22,7 +22,7 @@ $ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/
 #### Checking for new versions on a import_map.json file (also updating):
 
 ```sh
-$ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.2/mod.ts --update
+$ deno run --allow-net --allow-read --allow-write https://deno.land/x/dcu@0.1.3/mod.ts --update
 ```
 
 ```
