@@ -7,3 +7,9 @@ export type ReadMapFileResult = {
   error: string | null;
   isTS(): boolean;
 };
+
+export type JSONImportMap = {
+  imports: {
+    [k: string]: string;
+  }
+}

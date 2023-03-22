@@ -1,65 +1,62 @@
+import {
+  buildSourceURLWithVersion,
+  buildSourceURLWithoutVersion,
+  extractNameAndVersion,
+  extractURL,
+  fetchLatestSourceURL,
+} from "./../helpers/mod.ts";
 import { DenoModule } from "./types.ts";
 
-export const extractURL = (str: string): URL | null => {
-  const match = /from\s*["|']{1}(.+)["|']{1};?/gm.exec(str);
+const TS_SOURCE_REGEX = /from\s*["|']{1}(.+)["|']{1};?/gm;
 
-  return (match && new URL(match[1])) || null;
+export const buildTSModule = (str: string): Promise<DenoModule | null> => {
+  const currentSource = extractURL(str, TS_SOURCE_REGEX);
+
+  return buildModule(currentSource);
 };
 
-const extractNameAndVersion = (str: string): string[] => {
-  const match = /\/?(\w+)@v?([\d.]+)\/?/.exec(str);
+export const buildJSONModule = (str: string): Promise<DenoModule | null> => {
+  let currentSource = null;
 
-  return (match && match.toSpliced(0, 1).reverse()) || [];
+  try {
+    currentSource = new URL(str);
+  } catch(_) {
+    // do nothing
+  }
+
+  return buildModule(currentSource);
 };
 
-const buildSourceURLWithoutVersion = (
-  pathname: string,
-  origin: string,
-): string => {
-  const match = /(.*)@/.exec(pathname);
+const buildModule = async (currentSource: URL | null): Promise<DenoModule | null> => {
+  if (currentSource) {
+    const currentSourceURL = buildSourceURLWithVersion(
+      currentSource!.pathname,
+      currentSource!.origin,
+    );
+    const mainSourceURL = buildSourceURLWithoutVersion(
+      currentSource!.pathname,
+      currentSource!.origin,
+    );
+    const latestSourceURL = await fetchLatestSourceURL(mainSourceURL);
+    const latestSource = new URL(latestSourceURL);
 
-  return (match && `${origin}${match[1]}`) || "";
-};
+    const [currentVersion, name] = extractNameAndVersion(currentSource!.pathname);
+    const [latestVersion] = extractNameAndVersion(latestSource!.pathname);
 
-const buildSourceURLWithVersion = (
-  pathname: string,
-  origin: string,
-): string => {
-  const match = /(.*@v?[\d.]+)\/{1}/.exec(pathname);
+    const updated = false;
 
-  return (match && `${origin}${match[1]}`) || "";
-};
+    return {
+      name,
+      currentSourceURL,
+      currentVersion,
+      latestSourceURL,
+      latestVersion,
+      updated,
+      shouldUpdate() {
+        return currentVersion !== latestVersion;
+      },
+    };
+  }
 
-const fetchLatestSourceURL = (source: string): Promise<string> =>
-  fetch(source).then((response) => response.url);
-
-export const buildModule = async (str: string): Promise<DenoModule> => {
-  const currentSource = extractURL(str);
-  const currentSourceURL = buildSourceURLWithVersion(
-    currentSource!.pathname,
-    currentSource!.origin,
-  );
-  const mainSourceURL = buildSourceURLWithoutVersion(
-    currentSource!.pathname,
-    currentSource!.origin,
-  );
-  const latestSourceURL = await fetchLatestSourceURL(mainSourceURL);
-  const latestSource = new URL(latestSourceURL);
-
-  const [currentVersion, name] = extractNameAndVersion(currentSource!.pathname);
-  const [latestVersion] = extractNameAndVersion(latestSource!.pathname);
-
-  const updated = false;
-
-  return {
-    name,
-    currentSourceURL,
-    currentVersion,
-    latestSourceURL,
-    latestVersion,
-    updated,
-    shouldUpdate() {
-      return currentVersion !== latestVersion;
-    },
-  };
+  return null;
 };
